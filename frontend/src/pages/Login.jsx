@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/api";
-import "./Login.css"; // make sure this CSS exists and matches your jade styling
+import "./Login.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -15,7 +15,6 @@ export default function Login() {
       const res = await API.post("/auth/login", { email, password });
       const { role, token } = res.data;
 
-      // Save JWT and role
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
 
@@ -28,32 +27,45 @@ export default function Login() {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-container">
+    <main className="login-page">
+      <section className="login-container">
         <h2>Login</h2>
-        <form onSubmit={handleLogin}>
-          <input
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            type="email"
-            required
-          />
-          <input
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            type="password"
-            required
-          />
-          <button type="submit">Login</button>
+
+        <form onSubmit={handleLogin} className="login-form">
+          <div className="form-group">
+            <input
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <input
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              type="password"
+              required
+            />
+          </div>
+
+          <button type="submit" className="login-btn">
+            Login
+          </button>
         </form>
+
         {message && <p className="message">{message}</p>}
-        <p>
+
+        <p className="register-text">
           Don't have an account?{" "}
-          <span onClick={() => navigate("/register")}>Register</span>
+          <span className="register-link" onClick={() => navigate("/register")}>
+            Register
+          </span>
         </p>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

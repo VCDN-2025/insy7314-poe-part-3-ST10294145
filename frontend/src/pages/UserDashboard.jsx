@@ -1,18 +1,16 @@
 import React from "react";
-import "./UserDashboard.css";
 
-export default function UserDashboard() {
-  const handleLogout = () => {
-    localStorage.clear();
-    window.location.href = "/";
-  };
-
- return (
-    <>
-      <Navbar />
-      <div className="container">
-        <h2>Welcome User! This is your dashboard.</h2>
-      </div>
-    </>
+function UserDashboard() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-green-50">
+      <h1 className="text-3xl font-bold text-green-700 mb-4">
+        Welcome to Your Dashboard!
+      </h1>
+      <p className="text-gray-700">
+        You are successfully logged in as a user.
+      </p>
+    </div>
   );
 }
+
+export default UserDashboard;

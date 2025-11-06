@@ -1,6 +1,7 @@
 :root {
   --jade: #00E893;
   --jade-dark: #00b374;
+  --red: #ff4c4c;
   --white: #ffffff;
   --shadow: rgba(0, 0, 0, 0.15);
 }
@@ -13,9 +14,10 @@
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 4px 12px var(--shadow);
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 10;
+  left: 0;
+  z-index: 1000;
 }
 
 .logo {
@@ -53,7 +55,7 @@
 
 .logout-btn {
   padding: 8px 15px;
-  background: var(--jade);
+  background: var(--red);
   border: none;
   border-radius: 8px;
   color: var(--white);
@@ -62,6 +64,5 @@
 }
 
 .logout-btn:hover {
-  background: var(--jade-dark);
+  background: darkred;
 }
-

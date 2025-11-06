@@ -1,20 +1,13 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 
-export default function ProtectedRoute({ children, allowedRole }) {
+export default function ProtectedRoute({ children, allowedRoles }) {
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
 
-  if (!token) {
-    // Not logged in
-    return <Navigate to="/" />;
-  }
+  if (!token) return <Navigate to="/" />; // not logged in
 
-  if (allowedRole && role !== allowedRole) {
-    // Logged in but wrong role
-    return <Navigate to="/" />;
-  }
+  if (allowedRoles && !allowedRoles.includes(role)) return <Navigate to="/" />; // not allowed
 
-  // Authorized
   return children;
 }

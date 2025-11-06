@@ -1,0 +1,118 @@
+/* Login.css */
+
+/* Import a clean, modern font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+:root {
+  --jade: #00E893;
+  --jade-light: #33f4ab;
+  --jade-dark: #00b374;
+  --white: #ffffff;
+  --shadow: rgba(0, 0, 0, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+body, html, #root {
+  height: 100%;
+  background: linear-gradient(135deg, var(--jade-light), var(--jade-dark));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container {
+  background-color: var(--white);
+  padding: 40px 30px;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px var(--shadow);
+  text-align: center;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.login-container h2 {
+  color: var(--jade-dark);
+  margin-bottom: 25px;
+  font-weight: 600;
+  font-size: 1.8rem;
+}
+
+.login-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: #f9f9f9; /* light card background */
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px var(--shadow);
+}
+
+.login-container input {
+  padding: 12px 15px;
+  border: 2px solid #d0d0d0;
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  background-color: var(--white);
+}
+
+.login-container input:focus {
+  border-color: var(--jade);
+  box-shadow: 0 0 8px rgba(0, 232, 147, 0.5);
+}
+
+.login-container button {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: var(--jade);
+  color: var(--white);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-container button:hover {
+  background: var(--jade-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px var(--shadow);
+}
+
+.login-container p {
+  margin-top: 15px;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.login-container p span {
+  color: var(--jade);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-container p span:hover {
+  text-decoration: underline;
+}
+
+.login-container p.message {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  color: var(--jade-dark);
+  font-weight: 500;
+}
+
+/* Fade-in animation for the card */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(-20px);}
+  100% { opacity: 1; transform: translateY(0);}
+}

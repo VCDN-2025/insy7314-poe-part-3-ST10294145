@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/api";
+import "./Login.css"; // make sure this CSS exists and matches your jade styling
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -27,17 +28,32 @@ export default function Login() {
   };
 
   return (
-<div className="login-container">
-  <h2>Login</h2>
-  <form onSubmit={handleLogin}>
-    <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
-    <input placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
-    <button type="submit">Login</button>
-  </form>
-  {message && <p>{message}</p>}
-  <p>Don't have an account? <span onClick={() => navigate("/register")}>Register</span></p>
-</div>
-
-
+    <div className="login-page">
+      <div className="login-container">
+        <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          <input
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            required
+          />
+          <input
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            required
+          />
+          <button type="submit">Login</button>
+        </form>
+        {message && <p className="message">{message}</p>}
+        <p>
+          Don't have an account?{" "}
+          <span onClick={() => navigate("/register")}>Register</span>
+        </p>
+      </div>
+    </div>
   );
 }

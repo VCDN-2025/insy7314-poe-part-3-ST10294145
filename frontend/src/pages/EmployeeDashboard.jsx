@@ -8,9 +8,12 @@ export default function EmployeeDashboard() {
   };
 
   return (
-    <div className="container">
-      <h2>Welcome Employee! This is your admin dashboard.</h2>
-      <button onClick={handleLogout}>Logout</button>
-    </div>
+    <>
+      <Navbar />
+      <div className="container">
+        <h2>Welcome Employee! This is your admin dashboard.</h2>
+      </div>
+    </>
   );
 }
+

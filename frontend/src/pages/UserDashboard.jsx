@@ -7,10 +7,12 @@ export default function UserDashboard() {
     window.location.href = "/";
   };
 
-  return (
-<div className="container">
-  <h2>Welcome User! This is your dashboard.</h2>
-  <button onClick={handleLogout}>Logout</button>
-</div>
+ return (
+    <>
+      <Navbar />
+      <div className="container">
+        <h2>Welcome User! This is your dashboard.</h2>
+      </div>
+    </>
   );
 }

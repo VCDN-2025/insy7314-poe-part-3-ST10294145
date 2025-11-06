@@ -48,10 +48,6 @@ body, html, #root {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  background-color: #f9f9f9; /* light card background */
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 8px 20px var(--shadow);
 }
 
 .login-container input {
@@ -61,7 +57,6 @@ body, html, #root {
   outline: none;
   transition: all 0.3s ease;
   font-size: 1rem;
-  background-color: var(--white);
 }
 
 .login-container input:focus {

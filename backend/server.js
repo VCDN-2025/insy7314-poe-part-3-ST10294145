@@ -5,34 +5,56 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
-import paymentRoutes from "./routes/paymentRoutes.js"; 
+import paymentRoutes from "./routes/paymentRoutes.js";
+import transactionRoutes from "./routes/transactions.js";
 
 dotenv.config();
+
 const app = express();
 
-// Security / parsing middleware 
+// Middleware
 app.use(cors({
   origin: ["https://localhost:5173"], 
-  methods: ["GET","POST","PUT","DELETE"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
 }));
 app.use(express.json({ limit: "10kb" }));
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/payments", paymentRoutes); 
+app.use("/api/payments", paymentRoutes);
+app.use("/api/transactions", transactionRoutes);
 
-// MongoDB connection
+// Health check endpoint
+app.get("/api/health", (req, res) => {
+  res.json({ status: "OK", timestamp: new Date().toISOString() });
+});
+
+// Connect MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error(err));
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err);
+    process.exit(1);
+  });
 
-// SSL (mkcert files)
+// HTTPS server
 const sslOptions = {
   key: fs.readFileSync("./ssl/localhost-key.pem"),
-  cert: fs.readFileSync("./ssl/localhost.pem"), 
+  cert: fs.readFileSync("./ssl/localhost.pem"),
 };
 
 const PORT = process.env.PORT || 5000;
+
 https.createServer(sslOptions, app).listen(PORT, () => {
   console.log(`🔒 HTTPS Server running at https://localhost:${PORT}`);
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error("Global error handler:", err);
+  res.status(500).json({ 
+    message: "Internal server error",
+    error: process.env.NODE_ENV === "development" ? err.message : undefined
+  });
 });

@@ -13,14 +13,22 @@ export default function Login() {
     e.preventDefault();
     try {
       const res = await API.post("/auth/login", { email, password });
-      const { role, token } = res.data;
+      const { role, token, userName } = res.data;  //Get userName from response
 
+      // Save userName to localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
+      localStorage.setItem("userName", userName);  
+
+      console.log("✅ Login successful! User:", userName);
 
       // Redirect based on role
-      if (role === "employee") navigate("/employee");
-      else navigate("/user");
+      if (role === "employee") {
+        localStorage.setItem("employeeName", userName);  
+        navigate("/employee");
+      } else {
+        navigate("/user");
+      }
     } catch (err) {
       setMessage(err.response?.data?.message || "Login failed");
     }
@@ -30,7 +38,6 @@ export default function Login() {
     <main className="login-page">
       <section className="login-container">
         <h2>Login</h2>
-
         <form onSubmit={handleLogin} className="login-form">
           <div className="form-group">
             <input
@@ -41,7 +48,6 @@ export default function Login() {
               required
             />
           </div>
-
           <div className="form-group">
             <input
               placeholder="Password"
@@ -51,14 +57,11 @@ export default function Login() {
               required
             />
           </div>
-
           <button type="submit" className="login-btn">
             Login
           </button>
         </form>
-
         {message && <p className="message">{message}</p>}
-
         <p className="register-text">
           Don't have an account?{" "}
           <span className="register-link" onClick={() => navigate("/register")}>

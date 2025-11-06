@@ -6,6 +6,8 @@ import "./SwiftPage.css";
 const SwiftPage = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // User transaction form
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("USD");
   const [swiftCode, setSwiftCode] = useState("");
@@ -22,6 +24,7 @@ const SwiftPage = () => {
     if (isEmployee) fetchTransactions();
   }, []);
 
+  // Fetch all transactions (employees only)
   const fetchTransactions = async () => {
     setLoading(true);
     try {
@@ -35,39 +38,64 @@ const SwiftPage = () => {
     }
   };
 
-  // User: create new transaction
+  // Users: create a new transaction
   const createTransaction = async (e) => {
     e.preventDefault();
+    
+    // Validate userName exists
+    if (!userName || userName.trim() === "") {
+      alert("Error: User name not found. Please log in again.");
+      return;
+    }
+
     try {
-      await API.post("/transactions/create", { amount, currency, swiftCode, accountInfo });
+      const response = await API.post("/transactions/create", {
+        customerName: userName,
+        amount: parseFloat(amount), // Ensure it's a number
+        currency,
+        swiftCode,
+        accountInfo,
+      });
+      
+      console.log("Transaction created:", response.data);
       alert("Transaction created successfully!");
+      
+      // Clear form
       setAmount("");
       setCurrency("USD");
       setSwiftCode("");
       setAccountInfo("");
     } catch (err) {
       console.error("Transaction creation failed:", err);
-      alert("Failed to create transaction. Check console.");
+      console.error("Error response:", err.response?.data);
+      alert(`Failed to create transaction: ${err.response?.data?.message || err.message}`);
     }
   };
 
-  // Employee: update transaction status
+  // Employees: update transaction status
   const updateStatus = async (id, status) => {
     try {
       await API.put(`/transactions/status/${id}`, { status });
+      
+      // Use _id instead of id (MongoDB uses _id)
       setTransactions((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, status } : t))
+        prev.map((t) => (t._id === id ? { ...t, status } : t))
       );
+      
+      alert(`Transaction ${status} successfully!`);
     } catch (err) {
       console.error("Failed to update status:", err);
-      alert("Action failed. Check console.");
+      console.error("Error response:", err.response?.data);
+      alert(`Action failed: ${err.response?.data?.message || err.message}`);
     }
   };
 
+  // Employees: submit approved transactions
   const submitToSwift = async () => {
+    // Use _id instead of id
     const approvedIds = transactions
       .filter((t) => t.status === "approved")
-      .map((t) => t.id);
+      .map((t) => t._id);
 
     if (!approvedIds.length) {
       alert("No approved transactions to submit.");
@@ -80,7 +108,8 @@ const SwiftPage = () => {
       fetchTransactions();
     } catch (err) {
       console.error("Submit failed:", err);
-      alert("Submit failed. Check console.");
+      console.error("Error response:", err.response?.data);
+      alert(`Submit failed: ${err.response?.data?.message || err.message}`);
     }
   };
 
@@ -89,15 +118,15 @@ const SwiftPage = () => {
       case "pending":
         return (
           <>
-            <button onClick={() => updateStatus(t.id, "verified")}>Verify</button>
-            <button onClick={() => updateStatus(t.id, "rejected")}>Reject</button>
+            <button onClick={() => updateStatus(t._id, "verified")}>Verify</button>
+            <button onClick={() => updateStatus(t._id, "rejected")}>Reject</button>
           </>
         );
       case "verified":
         return (
           <>
-            <button onClick={() => updateStatus(t.id, "approved")}>Approve</button>
-            <button onClick={() => updateStatus(t.id, "rejected")}>Reject</button>
+            <button onClick={() => updateStatus(t._id, "approved")}>Approve</button>
+            <button onClick={() => updateStatus(t._id, "rejected")}>Reject</button>
           </>
         );
       case "approved":
@@ -120,6 +149,7 @@ const SwiftPage = () => {
             <form className="transaction-form" onSubmit={createTransaction}>
               <input
                 type="number"
+                step="0.01"
                 placeholder="Amount"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
@@ -171,7 +201,7 @@ const SwiftPage = () => {
                 </thead>
                 <tbody>
                   {transactions.map((t) => (
-                    <tr key={t.id}>
+                    <tr key={t._id}>
                       <td>{t.customerName}</td>
                       <td>{t.amount}</td>
                       <td>{t.currency}</td>

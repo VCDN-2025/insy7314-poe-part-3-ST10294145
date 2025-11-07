@@ -79,9 +79,7 @@ export default function EmployeeDashboard() {
           ))}
         </div>
 
-        <button onClick={handleLogout} className="logout-btn">
-          Logout
-        </button>
+        
       </div>
     </>
   );

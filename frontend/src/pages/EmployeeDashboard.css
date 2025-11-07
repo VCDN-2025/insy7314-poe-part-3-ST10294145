@@ -6,7 +6,7 @@ body, html {
 }
 
 .container {
-  margin-top: 80px; 
+  margin-top: 80px; /* leave space for fixed navbar */
   padding: 2rem;
   text-align: center;
 }
@@ -16,19 +16,33 @@ body, html {
   margin-bottom: 2rem;
 }
 
+/* Transactions grid: 2 per row */
 .transactions-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
   padding: 0 2rem;
 }
 
+/* Make it 1 per row on small screens */
+@media (max-width: 768px) {
+  .transactions-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Individual transaction cards */
 .transaction-card {
   background: #fff;
   padding: 1.5rem;
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   text-align: left;
+  transition: transform 0.2s ease;
+}
+
+.transaction-card:hover {
+  transform: translateY(-3px);
 }
 
 .transaction-card h3 {
@@ -36,37 +50,47 @@ body, html {
   margin-bottom: 0.5rem;
 }
 
+.transaction-card p {
+  margin: 0.3rem 0;
+}
+
+/* Buttons inside card (approve/reject) */
 .buttons {
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
 }
 
-button {
-  background-color: #007A5E;
-  color: white;
-  border: none;
+.buttons button {
+  flex: 1;
   padding: 0.5rem 1rem;
+  border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-weight: 500;
   transition: background-color 0.2s ease;
 }
 
-button:hover {
+/* Approve button */
+.buttons button:first-child {
+  background-color: #007A5E;
+  color: white;
+}
+
+.buttons button:first-child:hover {
   background-color: #005f4a;
 }
 
-.logout-btn {
-  margin-top: 2rem;
+/* Reject button */
+.buttons button:last-child {
   background-color: #e63946;
-  border: none;
   color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
 }
 
-.logout-btn:hover {
+.buttons button:last-child:hover {
   background-color: #c9303b;
 }
+
+
+
+

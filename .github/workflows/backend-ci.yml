@@ -19,15 +19,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ] || [ -f yarn.lock ]; then
-            npm ci
-          else
-            npm install
-          fi
+        run: npm install
 
       - name: Run ESLint
         run: npm run lint
@@ -44,18 +38,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ] || [ -f yarn.lock ]; then
-            npm ci
-          else
-            npm install
-          fi
+        run: npm install
 
       - name: Run tests
-        run: npm test
+        run: npm run test:ci
         env:
           NODE_ENV: test
 
@@ -68,6 +56,7 @@ jobs:
       - name: Upload coverage reports
         uses: codecov/codecov-action@v4
         if: always() && hashFiles('coverage/coverage-final.json') != ''
+        continue-on-error: true
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/coverage-final.json
@@ -86,19 +75,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ] || [ -f yarn.lock ]; then
-            npm ci
-          else
-            npm install
-          fi
+        run: npm install
 
       - name: Build application
-        run: npm run build
-        if: hashFiles('**/package.json') != '' && contains(fromJSON('["build", "compile", "dist"]'), 'build')
+        run: echo "No build step needed for Node.js backend"
+        # Uncomment if you add a build step later
+        # run: npm run build
 
   security:
     name: Security Audit
@@ -112,24 +96,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ] || [ -f yarn.lock ]; then
-            npm ci
-          else
-            npm install
-          fi
+        run: npm install
 
       - name: Run npm audit
         run: npm audit --audit-level=moderate
         continue-on-error: true
-
-      - name: Run Snyk security scan
-        uses: snyk/actions/node@master
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=high

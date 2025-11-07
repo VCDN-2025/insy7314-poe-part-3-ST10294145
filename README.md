@@ -126,6 +126,10 @@ npm run dev
 2. Users can create SWIFT transactions.
 3. Employees can manage transactions, approve, and submit them.
 
+- Employee role: bob@employee.com
+- User role: saihil@test.com
+- Password for both: password123
+
 ---
 
 ### 10. Future Enhancements

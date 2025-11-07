@@ -4,15 +4,29 @@ import { authenticate, authorizeRole } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+// Regex validators
+const nameRegex = /^[a-zA-Z\s]{2,50}$/;
+const swiftRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/;
+const accountRegex = /^[a-zA-Z0-9]{5,30}$/;
+const currencyRegex = /^(USD|EUR|ZAR)$/;
+
+function validateTransactionInput({ customerName, amount, currency, swiftCode, accountInfo }) {
+  if (!nameRegex.test(customerName)) return "Invalid customer name";
+  if (isNaN(amount) || amount <= 0) return "Invalid amount";
+  if (!currencyRegex.test(currency)) return "Invalid currency";
+  if (!swiftRegex.test(swiftCode)) return "Invalid SWIFT code";
+  if (!accountRegex.test(accountInfo)) return "Invalid account info";
+  return null;
+}
+
 // CREATE transaction (users only)
 router.post("/create", authenticate, authorizeRole("user"), async (req, res) => {
   try {
     const { customerName, amount, currency, swiftCode, accountInfo } = req.body;
     const userId = req.user.id;
 
-    if (!customerName || !amount || !currency || !swiftCode || !accountInfo) {
-      return res.status(400).json({ message: "Missing required fields" });
-    }
+    const error = validateTransactionInput({ customerName, amount, currency, swiftCode, accountInfo });
+    if (error) return res.status(400).json({ message: error });
 
     const transaction = await Transaction.create({
       userId,
@@ -46,11 +60,9 @@ router.get("/pending", authenticate, authorizeRole("employee"), async (req, res)
 router.get("/user/:userId", authenticate, async (req, res) => {
   try {
     const { userId } = req.params;
-
     if (req.user.role !== "employee" && req.user.id !== userId) {
       return res.status(403).json({ message: "You can only view your own transactions" });
     }
-
     const transactions = await Transaction.find({ userId }).sort({ createdAt: -1 });
     res.json({ success: true, transactions });
   } catch (err) {

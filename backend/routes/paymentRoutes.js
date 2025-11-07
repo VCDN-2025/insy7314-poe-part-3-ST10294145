@@ -4,22 +4,41 @@ import { authenticate, authorizeRole } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+// Regex validators
+const amountRegex = /^\d+(\.\d{1,2})?$/; // allows numbers with up to 2 decimal places
+const currencyRegex = /^(USD|EUR|ZAR)$/;
+const accountRegex = /^[a-zA-Z0-9]{5,30}$/;
+const swiftRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/;
+const providerRegex = /^[a-zA-Z\s]{2,50}$/;
+
+// Validate payment input
+function validatePaymentInput({ amount, currency, provider, payeeAccount, swiftCode }) {
+  if (!amountRegex.test(amount)) return "Invalid amount";
+  if (!currencyRegex.test(currency)) return "Invalid currency";
+  if (!providerRegex.test(provider)) return "Invalid provider name";
+  if (!accountRegex.test(payeeAccount)) return "Invalid account info";
+  if (!swiftRegex.test(swiftCode)) return "Invalid SWIFT code";
+  return null;
+}
+
 /**
  * POST /api/payments
  * Create a payment (user only)
- * body: { customerId, amount, currency, provider, payeeAccount, swiftCode }
  */
 router.post("/", authenticate, authorizeRole("user"), async (req, res) => {
   try {
-    // Ensure the customerId is consistent with logged-in user if needed:
-    // const customerId = req.body.customerId || req.user._id.toString();
+    const { customerId, amount, currency, provider, payeeAccount, swiftCode } = req.body;
+
+    const error = validatePaymentInput({ amount, currency, provider, payeeAccount, swiftCode });
+    if (error) return res.status(400).json({ message: error });
+
     const payment = new Payment({
-      customerId: req.body.customerId || req.user._id.toString(),
-      amount: req.body.amount,
-      currency: req.body.currency,
-      provider: req.body.provider,
-      payeeAccount: req.body.payeeAccount,
-      swiftCode: req.body.swiftCode,
+      customerId: customerId || req.user._id.toString(),
+      amount: parseFloat(amount),
+      currency,
+      provider,
+      payeeAccount,
+      swiftCode,
       status: "Pending"
     });
 

@@ -1,5 +1,4 @@
 import express from "express";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
@@ -7,7 +6,6 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
-// Login route - only login, no registration
 // POST /api/auth/login
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -17,7 +15,7 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(401).json({ message: "Invalid credentials" });
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await user.comparePassword(password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
     const payload = { id: user._id, role: user.role, email: user.email };

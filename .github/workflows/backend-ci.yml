@@ -2,39 +2,53 @@ name: Backend CI
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - master
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+      - master
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 18
+
+      - name: Cache npm
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
-        working-directory: backend
-        run: npm install
+        run: npm ci
 
-      - name: Lint code
-        working-directory: backend
-        run: npx eslint .
-
-      - name: Run backend tests
-        working-directory: backend
+      - name: Create ESLint CI config (enable Node globals)
         run: |
-          echo "No tests defined yet. Skipping..."
+          cat > .eslintrc.ci.json <<'EOF'
+          {
+            "env": {
+              "node": true,
+              "es2021": true
+            }
+          }
+          EOF
 
-      - name: Upload build artifacts
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-artifacts
-          path: backend/
+      - name: Run linter (use CI config)
+        # Lint the backend folder; adjust path if your lint script targets other folders
+        run: npx eslint -c .eslintrc.ci.json backend || exit 1
+
+      - name: Run tests
+        run: npm test
+        env:
+          NODE_ENV: test

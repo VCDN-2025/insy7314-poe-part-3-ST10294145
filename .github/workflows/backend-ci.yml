@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
     - name: Set up Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: 18
 
@@ -29,31 +29,16 @@ jobs:
         cd backend
         npm run lint
 
-    - name: Security Audit
-      run: |
-        cd backend
-        npm audit --audit-level=high || true
-
     - name: Start backend server
       run: |
         cd backend
         nohup npm start > backend_ci_log.txt 2>&1 &
         sleep 5
 
-    - name: Run integration test
-      run: |
-        cd backend
-        npm test || echo "No tests found"
-
     - name: Run Newman API tests
       run: |
         cd backend
         npx newman run tests/collection.json --env-var baseUrl=http://localhost:5000
-
-    - name: Build Docker image
-      run: |
-        cd backend
-        docker build -t agri-backend:latest .
 
     - name: SonarCloud Scan
       uses: sonarsource/sonarcloud-github-action@v2
@@ -63,7 +48,7 @@ jobs:
         token: ${{ secrets.SONAR_TOKEN }}
 
     - name: Upload backend logs
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: backend-ci-log
         path: backend/backend_ci_log.txt

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Login.css"; // make sure this path matches your file structure
+import "./Login.css"; // make sure the path matches your structure
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -25,22 +25,22 @@ const Login = () => {
         }
       );
 
-      if (response.data.success) {
-        const { token, user } = response.data;
+      // Backend returns { token, user }
+      const { token, user } = response.data;
 
-        // Save to localStorage
-        localStorage.setItem("token", token);
-        localStorage.setItem("role", user.role);
-        localStorage.setItem("userName", user.name);
-        localStorage.setItem("userId", user.id);
+      // Save to localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", user.role);
+      localStorage.setItem("userName", user.name);
+      localStorage.setItem("userId", user.id);
 
-        // Navigate based on role
-        if (user.role === "employee") {
-          navigate("/swift");
-        } else {
-          navigate("/dashboard");
-        }
+      // Navigate based on role
+      if (user.role === "employee") {
+        navigate("/employee"); // employee dashboard
+      } else {
+        navigate("/user"); // user dashboard
       }
+
     } catch (err) {
       if (err.response) {
         setError(err.response.data.message || "Login failed");
@@ -94,7 +94,7 @@ const Login = () => {
         <div className="hint">
           <p><strong>Test Accounts:</strong></p>
           <p>👤 User: user@test.com / password123</p>
-          <p>👨‍💼 Employee: employee@test.com / password123</p>
+          <p>👨‍💼 Employee: bob@employee.com / password123</p>
         </div>
       </div>
     </div>

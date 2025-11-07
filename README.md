@@ -139,7 +139,7 @@ npm run dev
 
 ### 11. Contributors
 
-- **Saihil Gurupersad**
+- **Saihil Gurupersad (ST10294145)**
 - **Yash Dhurumraj (ST10266783)**
 - **Dinay Ramchander (ST10311999)**
 - **Nehara Pillay (ST10198206)**

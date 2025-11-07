@@ -3,26 +3,26 @@
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #fff; /* White navbar */
+  background-color: #fff; 
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.4rem 1.5rem; /* Smaller padding for thinner navbar */
+  padding: 0.4rem 1.5rem; 
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
   z-index: 1000;
-  height: 55px; /* Explicit smaller height */
+  height: 55px; 
 }
 
 .logo {
   color: #007A5E;
-  font-size: 1.2rem; /* Slightly smaller text */
+  font-size: 1.2rem; 
   font-weight: 700;
   margin: 0;
 }
 
 .nav-center {
   display: flex;
-  gap: 1rem; /* Slightly reduced gap */
+  gap: 1rem;
   align-items: center;
 }
 
@@ -30,7 +30,7 @@
   color: #007A5E;
   text-decoration: none;
   font-weight: 600;
-  font-size: 0.95rem; /* Slightly smaller links */
+  font-size: 0.95rem; 
   transition: color 0.2s ease;
 }
 

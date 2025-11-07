@@ -6,7 +6,7 @@ body, html {
 }
 
 .container {
-  margin-top: 80px; /* leave space for fixed navbar */
+  margin-top: 80px; 
   padding: 2rem;
   text-align: center;
 }
@@ -16,7 +16,7 @@ body, html {
   margin-bottom: 2rem;
 }
 
-/* Transactions grid: 2 per row */
+
 .transactions-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -24,14 +24,13 @@ body, html {
   padding: 0 2rem;
 }
 
-/* Make it 1 per row on small screens */
 @media (max-width: 768px) {
   .transactions-container {
     grid-template-columns: 1fr;
   }
 }
 
-/* Individual transaction cards */
+
 .transaction-card {
   background: #fff;
   padding: 1.5rem;
@@ -54,7 +53,7 @@ body, html {
   margin: 0.3rem 0;
 }
 
-/* Buttons inside card (approve/reject) */
+
 .buttons {
   display: flex;
   gap: 1rem;

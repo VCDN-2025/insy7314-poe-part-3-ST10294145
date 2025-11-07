@@ -14,7 +14,7 @@ dotenv.config();
 
 const app = express();
 
-// Middleware 
+ 
 
 // CORS
 app.use(cors({
@@ -54,9 +54,9 @@ app.get("/api/health", (req, res) => {
 
 // MongoDB 
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB connected"))
+  .then(() => console.log("MongoDB connected"))
   .catch((err) => {
-    console.error("❌ MongoDB connection error:", err);
+    console.error(" MongoDB connection error:", err);
     process.exit(1);
   });
 
@@ -69,7 +69,7 @@ const sslOptions = {
 const PORT = process.env.PORT || 5000;
 
 https.createServer(sslOptions, app).listen(PORT, () => {
-  console.log(`🔒 HTTPS Server running at https://localhost:${PORT}`);
+  console.log(`HTTPS Server running at https://localhost:${PORT}`);
 });
 
 // Global error handler 

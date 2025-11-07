@@ -6,9 +6,12 @@ body, html {
 }
 
 .dashboard-container {
-  margin-top: 80px; 
-  padding: 2rem;
+  padding-top: 100px;
+  padding-left: 2rem;
+  padding-right: 2rem;
   text-align: center;
+  box-sizing: border-box;
+  min-height: calc(100vh - 100px); 
 }
 
 .dashboard-container h2 {
@@ -17,12 +20,12 @@ body, html {
   margin-bottom: 1rem;
 }
 
+
 .transactions-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
   margin-top: 2rem;
-  padding: 0 2rem;
 }
 
 .transaction-card {
@@ -42,11 +45,20 @@ body, html {
   color: orange;
   font-weight: 600;
 }
+
 .status-approved {
   color: green;
   font-weight: 600;
 }
+
 .status-rejected {
   color: red;
   font-weight: 600;
+}
+
+
+@media (max-width: 600px) {
+  .dashboard-container {
+    padding-top: 120px; 
+  }
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Login.css"; // make sure the path matches your structure
+import "./Login.css"; 
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -36,9 +36,9 @@ const Login = () => {
 
       // Navigate based on role
       if (user.role === "employee") {
-        navigate("/employee"); // employee dashboard
+        navigate("/employee"); 
       } else {
-        navigate("/user"); // user dashboard
+        navigate("/user"); 
       }
 
     } catch (err) {
@@ -90,12 +90,6 @@ const Login = () => {
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-
-        <div className="hint">
-          <p><strong>Test Accounts:</strong></p>
-          <p>👤 User: user@test.com / password123</p>
-          <p>👨‍💼 Employee: bob@employee.com / password123</p>
-        </div>
       </div>
     </div>
   );

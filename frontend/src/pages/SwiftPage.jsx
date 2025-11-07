@@ -42,7 +42,6 @@ const SwiftPage = () => {
   const createTransaction = async (e) => {
     e.preventDefault();
     
-    // Validate userName exists
     if (!userName || userName.trim() === "") {
       alert("Error: User name not found. Please log in again.");
       return;
@@ -51,16 +50,13 @@ const SwiftPage = () => {
     try {
       const response = await API.post("/transactions/create", {
         customerName: userName,
-        amount: parseFloat(amount), // Ensure it's a number
+        amount: parseFloat(amount),
         currency,
         swiftCode,
         accountInfo,
       });
-      
       console.log("Transaction created:", response.data);
       alert("Transaction created successfully!");
-      
-      // Clear form
       setAmount("");
       setCurrency("USD");
       setSwiftCode("");
@@ -76,12 +72,9 @@ const SwiftPage = () => {
   const updateStatus = async (id, status) => {
     try {
       await API.put(`/transactions/status/${id}`, { status });
-      
-      // Use _id instead of id (MongoDB uses _id)
       setTransactions((prev) =>
         prev.map((t) => (t._id === id ? { ...t, status } : t))
       );
-      
       alert(`Transaction ${status} successfully!`);
     } catch (err) {
       console.error("Failed to update status:", err);
@@ -92,7 +85,6 @@ const SwiftPage = () => {
 
   // Employees: submit approved transactions
   const submitToSwift = async () => {
-    // Use _id instead of id
     const approvedIds = transactions
       .filter((t) => t.status === "approved")
       .map((t) => t._id);
@@ -117,22 +109,22 @@ const SwiftPage = () => {
     switch (t.status) {
       case "pending":
         return (
-          <>
+          <div className="action-buttons">
             <button onClick={() => updateStatus(t._id, "verified")}>Verify</button>
             <button onClick={() => updateStatus(t._id, "rejected")}>Reject</button>
-          </>
+          </div>
         );
       case "verified":
         return (
-          <>
+          <div className="action-buttons">
             <button onClick={() => updateStatus(t._id, "approved")}>Approve</button>
             <button onClick={() => updateStatus(t._id, "rejected")}>Reject</button>
-          </>
+          </div>
         );
       case "approved":
-        return <span>👍 Approved</span>;
+        return <span className="status-approved">👍 Approved</span>;
       case "rejected":
-        return <span>❌ Rejected</span>;
+        return <span className="status-rejected">❌ Rejected</span>;
       default:
         return null;
     }
@@ -142,82 +134,102 @@ const SwiftPage = () => {
     <div className="swift-page">
       <Navbar employeeName={employeeName} userName={userName} />
 
-      <div className="swift-container">
+      <main className="swift-container">
         {isUser && (
-          <>
+          <section className="swift-user-section">
             <h2>Make a New International Payment</h2>
             <form className="transaction-form" onSubmit={createTransaction}>
-              <input
-                type="number"
-                step="0.01"
-                placeholder="Amount"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                required
-              />
-              <select value={currency} onChange={(e) => setCurrency(e.target.value)}>
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-                <option value="ZAR">ZAR</option>
-              </select>
-              <input
-                type="text"
-                placeholder="SWIFT Code"
-                value={swiftCode}
-                onChange={(e) => setSwiftCode(e.target.value)}
-                required
-              />
-              <input
-                type="text"
-                placeholder="Account Info"
-                value={accountInfo}
-                onChange={(e) => setAccountInfo(e.target.value)}
-                required
-              />
-              <button type="submit">Submit Payment</button>
+              <div className="form-group">
+                <label>Amount</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  placeholder="Enter amount"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Currency</label>
+                <select value={currency} onChange={(e) => setCurrency(e.target.value)}>
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                  <option value="ZAR">ZAR</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>SWIFT Code</label>
+                <input
+                  type="text"
+                  placeholder="Enter SWIFT Code"
+                  value={swiftCode}
+                  onChange={(e) => setSwiftCode(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Account Info</label>
+                <input
+                  type="text"
+                  placeholder="Enter Account Info"
+                  value={accountInfo}
+                  onChange={(e) => setAccountInfo(e.target.value)}
+                  required
+                />
+              </div>
+
+              <button type="submit" className="submit-btn">Submit Payment</button>
             </form>
-          </>
+          </section>
         )}
 
         {isEmployee && (
-          <>
+          <section className="swift-employee-section">
             <h2>Pending International Payments</h2>
             {loading ? (
-              <div>Loading transactions…</div>
+              <div className="loading">Loading transactions…</div>
             ) : !transactions.length ? (
-              <div>No pending transactions</div>
+              <div className="no-transactions">No pending transactions</div>
             ) : (
-              <table className="swift-table">
-                <thead>
-                  <tr>
-                    <th>Customer</th>
-                    <th>Amount</th>
-                    <th>Currency</th>
-                    <th>SWIFT Code</th>
-                    <th>Account Info</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {transactions.map((t) => (
-                    <tr key={t._id}>
-                      <td>{t.customerName}</td>
-                      <td>{t.amount}</td>
-                      <td>{t.currency}</td>
-                      <td>{t.swiftCode}</td>
-                      <td>{t.accountInfo}</td>
-                      <td>{t.status}</td>
-                      <td>{renderActions(t)}</td>
+              <div className="table-wrapper">
+                <table className="swift-table">
+                  <thead>
+                    <tr>
+                      <th>Customer</th>
+                      <th>Amount</th>
+                      <th>Currency</th>
+                      <th>SWIFT Code</th>
+                      <th>Account Info</th>
+                      <th>Status</th>
+                      <th>Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {transactions.map((t) => (
+                      <tr key={t._id}>
+                        <td>{t.customerName}</td>
+                        <td>{t.amount}</td>
+                        <td>{t.currency}</td>
+                        <td>{t.swiftCode}</td>
+                        <td>{t.accountInfo}</td>
+                        <td>{t.status}</td>
+                        <td>{renderActions(t)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
-            <button onClick={submitToSwift}>Submit Approved to SWIFT</button>
-          </>
+            <button className="submit-approved-btn" onClick={submitToSwift}>
+              Submit Approved to SWIFT
+            </button>
+          </section>
         )}
-      </div>
+      </main>
     </div>
   );
 };

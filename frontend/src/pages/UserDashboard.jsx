@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Navbar from "../components/Navbar"; 
 import "./UserDashboard.css";
 
 export default function UserDashboard() {
@@ -32,38 +33,43 @@ export default function UserDashboard() {
   }, [userId, token]);
 
   return (
-    <div className="dashboard-container">
-      <h2>Welcome {localStorage.getItem("userName")}!</h2>
-      <p>Your transaction updates will appear below:</p>
+    <>
+      {/* Pass the userName to Navbar so it shows on the right */}
+      <Navbar userName={localStorage.getItem("userName")} />
 
-      {loading && <p>Loading transactions...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      <div className="dashboard-container">
+        <h2>Welcome {localStorage.getItem("userName")}!</h2>
+        <p>Your transaction updates will appear below:</p>
 
-      <div className="transactions-container">
-        {transactions.length === 0 && !loading && <p>No transactions found.</p>}
-        {transactions.map((tx) => (
-          <div key={tx._id} className="transaction-card">
-            <h3>{tx.customerName}</h3>
-            <p>Amount: {tx.amount} {tx.currency}</p>
-            <p>Account: {tx.accountInfo}</p>
-            <p>SWIFT: {tx.swiftCode}</p>
-            <p>
-              Status:{" "}
-              <span
-                className={
-                  tx.status === "pending"
-                    ? "status-pending"
-                    : tx.status === "approved"
-                    ? "status-approved"
-                    : "status-rejected"
-                }
-              >
-                {tx.status.toUpperCase()}
-              </span>
-            </p>
-          </div>
-        ))}
+        {loading && <p>Loading transactions...</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        <div className="transactions-container">
+          {transactions.length === 0 && !loading && <p>No transactions found.</p>}
+          {transactions.map((tx) => (
+            <div key={tx._id} className="transaction-card">
+              <h3>{tx.customerName}</h3>
+              <p>Amount: {tx.amount} {tx.currency}</p>
+              <p>Account: {tx.accountInfo}</p>
+              <p>SWIFT: {tx.swiftCode}</p>
+              <p>
+                Status:{" "}
+                <span
+                  className={
+                    tx.status === "pending"
+                      ? "status-pending"
+                      : tx.status === "approved"
+                      ? "status-approved"
+                      : "status-rejected"
+                  }
+                >
+                  {tx.status.toUpperCase()}
+                </span>
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

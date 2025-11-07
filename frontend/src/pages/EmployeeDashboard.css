@@ -1,107 +1,72 @@
-/* General container */
-.container {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 30px;
-  background-color: #e0f2f1; /* soft jade background */
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  text-align: center;
+body, html {
+  margin: 0;
+  padding: 0;
+  background-color: #f4f6f8;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Heading */
-.container h2 {
-  color: #00695c; /* dark jade heading */
-  margin-bottom: 30px;
-  font-size: 2rem;
-}
-
-/* Table */
-.transactions-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.transactions-table th,
-.transactions-table td {
-  padding: 12px 15px;
-  border: 1px solid #b2dfdb;
+.container {
+  margin-top: 80px; 
+  padding: 2rem;
   text-align: center;
 }
 
-.transactions-table th {
-  background-color: #00796b;
-  color: #fff;
-  font-weight: bold;
-  border-radius: 8px 8px 0 0;
+.container h2 {
+  color: #007A5E;
+  margin-bottom: 2rem;
 }
 
-.transactions-table td {
-  background-color: #e0f2f1;
-  color: #004d40;
-  border-radius: 0;
+.transactions-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 0 2rem;
 }
 
-.status-pending {
-  color: orange;
-  font-weight: bold;
+.transaction-card {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: left;
 }
 
-.status-approved {
-  color: green;
-  font-weight: bold;
+.transaction-card h3 {
+  color: #333;
+  margin-bottom: 0.5rem;
 }
 
-.status-rejected {
-  color: red;
-  font-weight: bold;
+.buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
-/* Buttons */
-.btn-approve,
-.btn-reject {
-  padding: 6px 14px;
-  margin: 0 4px;
+button {
+  background-color: #007A5E;
+  color: white;
   border: none;
-  border-radius: 8px;
-  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
-.btn-approve {
-  background-color: #00796b;
-  color: #fff;
+button:hover {
+  background-color: #005f4a;
 }
 
-.btn-approve:hover {
-  background-color: #004d40;
-  transform: translateY(-2px);
+.logout-btn {
+  margin-top: 2rem;
+  background-color: #e63946;
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-.btn-reject {
-  background-color: #c62828;
-  color: #fff;
-}
-
-.btn-reject:hover {
-  background-color: #8e0000;
-  transform: translateY(-2px);
-}
-
-/* Responsive for small screens */
-@media (max-width: 768px) {
-  .transactions-table th,
-  .transactions-table td {
-    padding: 8px;
-    font-size: 14px;
-  }
-
-  .btn-approve,
-  .btn-reject {
-    padding: 4px 10px;
-    font-size: 12px;
-  }
+.logout-btn:hover {
+  background-color: #c9303b;
 }

@@ -1,92 +1,52 @@
 body, html {
   margin: 0;
   padding: 0;
-  height: 100%;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #00A86B; /* Jade */
+  background-color: #f4f6f8;
 }
 
 .dashboard-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  color: #fff; /* White text for contrast */
+  margin-top: 80px; 
+  padding: 2rem;
   text-align: center;
-  padding: 20px;
 }
 
 .dashboard-container h2 {
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
+  color: #007A5E;
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
-/* Button styles */
-.dashboard-container button {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 8px;
-  background-color: #ffffff33; /* Semi-transparent white */
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.dashboard-container button:hover {
-  background-color: #ffffff55; /* Slightly more visible on hover */
-}
-
-/* Transaction cards container */
 .transactions-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  width: 100%;
-  max-width: 1000px;
-  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+  padding: 0 2rem;
 }
 
-/* Individual transaction card */
 .transaction-card {
-  background-color: #ffffff33; /* semi-transparent jade-white */
-  color: #fff;
-  border-radius: 15px;
-  padding: 20px;
-  width: 250px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: left;
+  transition: transform 0.2s ease;
 }
 
 .transaction-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+  transform: translateY(-3px);
 }
 
-.transaction-card h3 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 1.2rem;
-}
-
-.transaction-card p {
-  margin: 5px 0;
-  font-size: 0.95rem;
-}
-
-/* Status badges */
 .status-pending {
   color: orange;
-  font-weight: bold;
+  font-weight: 600;
 }
-
 .status-approved {
   color: green;
-  font-weight: bold;
+  font-weight: 600;
 }
-
 .status-rejected {
   color: red;
-  font-weight: bold;
+  font-weight: 600;
 }

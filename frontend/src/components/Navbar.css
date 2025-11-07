@@ -1,68 +1,72 @@
-:root {
-  --jade: #00E893;
-  --jade-dark: #00b374;
-  --red: #ff4c4c;
-  --white: #ffffff;
-  --shadow: rgba(0, 0, 0, 0.15);
-}
-
 .navbar {
-  width: 100%;
-  background: var(--white);
-  padding: 12px 30px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 4px 12px var(--shadow);
   position: fixed;
   top: 0;
   left: 0;
+  width: 100%;
+  background-color: #fff; /* White navbar */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 1.5rem; /* Smaller padding for thinner navbar */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
   z-index: 1000;
+  height: 55px; /* Explicit smaller height */
 }
 
 .logo {
-  font-size: 1.4rem;
-  color: var(--jade-dark);
-  font-weight: 600;
+  color: #007A5E;
+  font-size: 1.2rem; /* Slightly smaller text */
+  font-weight: 700;
+  margin: 0;
 }
 
 .nav-center {
   display: flex;
-  gap: 20px;
+  gap: 1rem; /* Slightly reduced gap */
+  align-items: center;
 }
 
 .nav-link {
+  color: #007A5E;
   text-decoration: none;
-  color: #444;
-  font-weight: 500;
-  transition: 0.3s;
+  font-weight: 600;
+  font-size: 0.95rem; /* Slightly smaller links */
+  transition: color 0.2s ease;
 }
 
 .nav-link:hover {
-  color: var(--jade-dark);
+  color: #004d3b;
 }
 
 .nav-right {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 0.8rem;
 }
 
 .user-label {
-  font-weight: 500;
-  color: var(--jade-dark);
+  color: #007A5E;
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .logout-btn {
-  padding: 8px 15px;
-  background: var(--red);
+  background-color: #007A5E;
+  color: #fff;
   border: none;
-  border-radius: 8px;
-  color: var(--white);
+  padding: 0.35rem 0.8rem;
+  border-radius: 5px;
   cursor: pointer;
-  transition: 0.3s;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+
+   margin-top: 0px;
+  margin-bottom: 5px;
 }
 
+
 .logout-btn:hover {
-  background: darkred;
+  background-color: #005f49;
+  transform: scale(1.05);
 }

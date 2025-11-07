@@ -7,26 +7,11 @@ const router = express.Router();
 // CREATE transaction (users only)
 router.post("/create", authenticate, authorizeRole("user"), async (req, res) => {
   try {
-    console.log("=== CREATE TRANSACTION DEBUG ===");
-    console.log("Request Body:", req.body);
-    console.log("User from Token:", req.user);
-    
     const { customerName, amount, currency, swiftCode, accountInfo } = req.body;
     const userId = req.user.id;
 
-    // Validate required fields
     if (!customerName || !amount || !currency || !swiftCode || !accountInfo) {
-      console.error("Missing required fields:", { customerName, amount, currency, swiftCode, accountInfo });
-      return res.status(400).json({ 
-        message: "Missing required fields",
-        missing: {
-          customerName: !customerName,
-          amount: !amount,
-          currency: !currency,
-          swiftCode: !swiftCode,
-          accountInfo: !accountInfo
-        }
-      });
+      return res.status(400).json({ message: "Missing required fields" });
     }
 
     const transaction = await Transaction.create({
@@ -39,41 +24,38 @@ router.post("/create", authenticate, authorizeRole("user"), async (req, res) => 
       status: "pending",
     });
 
-    console.log("✅ Transaction created successfully:", transaction._id);
     res.status(201).json(transaction);
-    
   } catch (err) {
-    console.error("=== TRANSACTION CREATE ERROR ===", err);
-    
-    if (err.name === "ValidationError") {
-      return res.status(400).json({ 
-        message: "Validation error",
-        errors: Object.keys(err.errors).map(key => ({
-          field: key,
-          message: err.errors[key].message
-        }))
-      });
-    }
-    
-    res.status(500).json({ 
-      message: "Transaction creation failed",
-      error: process.env.NODE_ENV === "development" ? err.message : undefined
-    });
+    console.error(err);
+    res.status(500).json({ message: "Transaction creation failed", error: err.message });
   }
 });
 
-// GET pending transactions (employees only)
+// GET all pending transactions (employees only)
 router.get("/pending", authenticate, authorizeRole("employee"), async (req, res) => {
   try {
     const transactions = await Transaction.find().sort({ createdAt: -1 });
-    console.log(`✅ Fetched ${transactions.length} transactions`);
     res.status(200).json(transactions);
   } catch (err) {
-    console.error("Fetching transactions failed:", err);
-    res.status(500).json({ 
-      message: "Failed to fetch transactions",
-      error: process.env.NODE_ENV === "development" ? err.message : undefined
-    });
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch transactions", error: err.message });
+  }
+});
+
+// GET transactions for a specific user
+router.get("/user/:userId", authenticate, async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (req.user.role !== "employee" && req.user.id !== userId) {
+      return res.status(403).json({ message: "You can only view your own transactions" });
+    }
+
+    const transactions = await Transaction.find({ userId }).sort({ createdAt: -1 });
+    res.json({ success: true, transactions });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch transactions", error: err.message });
   }
 });
 
@@ -82,7 +64,7 @@ router.put("/status/:id", authenticate, authorizeRole("employee"), async (req, r
   try {
     const { status } = req.body;
     const validStatus = ["verified", "approved", "rejected"];
-    
+
     if (!validStatus.includes(status)) {
       return res.status(400).json({ message: "Invalid status. Must be: verified, approved, or rejected" });
     }
@@ -97,44 +79,10 @@ router.put("/status/:id", authenticate, authorizeRole("employee"), async (req, r
       return res.status(404).json({ message: "Transaction not found" });
     }
 
-    console.log(`✅ Updated transaction ${req.params.id} to ${status}`);
     res.status(200).json(transaction);
-    
   } catch (err) {
-    console.error("Updating transaction status failed:", err);
-    res.status(500).json({ 
-      message: "Failed to update status",
-      error: process.env.NODE_ENV === "development" ? err.message : undefined
-    });
-  }
-});
-
-// SUBMIT approved transactions to SWIFT (employees only)
-router.post("/submit", authenticate, authorizeRole("employee"), async (req, res) => {
-  try {
-    const { transactionIds } = req.body;
-
-    if (!transactionIds || !Array.isArray(transactionIds) || transactionIds.length === 0) {
-      return res.status(400).json({ message: "No transaction IDs provided" });
-    }
-
-    const result = await Transaction.updateMany(
-      { _id: { $in: transactionIds }, status: "approved" },
-      { status: "submitted" }
-    );
-
-    console.log(`✅ Submitted ${result.modifiedCount} transactions to SWIFT`);
-    res.status(200).json({ 
-      message: "Transactions submitted to SWIFT",
-      count: result.modifiedCount
-    });
-    
-  } catch (err) {
-    console.error("Submit failed:", err);
-    res.status(500).json({ 
-      message: "Submit failed",
-      error: process.env.NODE_ENV === "development" ? err.message : undefined
-    });
+    console.error(err);
+    res.status(500).json({ message: "Failed to update status", error: err.message });
   }
 });
 

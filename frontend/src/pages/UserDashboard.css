@@ -9,11 +9,11 @@ body, html {
 .dashboard-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: 100vh; /* Full viewport height */
+  min-height: 100vh;
   color: #fff; /* White text for contrast */
   text-align: center;
+  padding: 20px;
 }
 
 .dashboard-container h2 {
@@ -21,6 +21,7 @@ body, html {
   margin-bottom: 2rem;
 }
 
+/* Button styles */
 .dashboard-container button {
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
@@ -34,4 +35,58 @@ body, html {
 
 .dashboard-container button:hover {
   background-color: #ffffff55; /* Slightly more visible on hover */
+}
+
+/* Transaction cards container */
+.transactions-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 1000px;
+  margin-top: 30px;
+}
+
+/* Individual transaction card */
+.transaction-card {
+  background-color: #ffffff33; /* semi-transparent jade-white */
+  color: #fff;
+  border-radius: 15px;
+  padding: 20px;
+  width: 250px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.transaction-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+}
+
+.transaction-card h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+.transaction-card p {
+  margin: 5px 0;
+  font-size: 0.95rem;
+}
+
+/* Status badges */
+.status-pending {
+  color: orange;
+  font-weight: bold;
+}
+
+.status-approved {
+  color: green;
+  font-weight: bold;
+}
+
+.status-rejected {
+  color: red;
+  font-weight: bold;
 }

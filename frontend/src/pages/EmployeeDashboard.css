@@ -1,7 +1,8 @@
+/* General container */
 .container {
-  max-width: 600px;
-  margin: 80px auto;
-  padding: 40px;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
   background-color: #e0f2f1; /* soft jade background */
   border-radius: 15px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
@@ -9,27 +10,98 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-h2 {
+/* Heading */
+.container h2 {
   color: #00695c; /* dark jade heading */
   margin-bottom: 30px;
+  font-size: 2rem;
 }
 
-button {
-  background-color: #00796b; /* jade button */
+/* Table */
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.transactions-table th,
+.transactions-table td {
+  padding: 12px 15px;
+  border: 1px solid #b2dfdb;
+  text-align: center;
+}
+
+.transactions-table th {
+  background-color: #00796b;
   color: #fff;
-  border: none;
-  padding: 14px 28px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-weight: bold;
+  border-radius: 8px 8px 0 0;
 }
 
-button:hover {
-  background-color: #004d40; /* darker jade on hover */
+.transactions-table td {
+  background-color: #e0f2f1;
+  color: #004d40;
+  border-radius: 0;
+}
+
+.status-pending {
+  color: orange;
+  font-weight: bold;
+}
+
+.status-approved {
+  color: green;
+  font-weight: bold;
+}
+
+.status-rejected {
+  color: red;
+  font-weight: bold;
+}
+
+/* Buttons */
+.btn-approve,
+.btn-reject {
+  padding: 6px 14px;
+  margin: 0 4px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-approve {
+  background-color: #00796b;
+  color: #fff;
+}
+
+.btn-approve:hover {
+  background-color: #004d40;
   transform: translateY(-2px);
 }
 
-button:active {
-  transform: translateY(0);
+.btn-reject {
+  background-color: #c62828;
+  color: #fff;
+}
+
+.btn-reject:hover {
+  background-color: #8e0000;
+  transform: translateY(-2px);
+}
+
+/* Responsive for small screens */
+@media (max-width: 768px) {
+  .transactions-table th,
+  .transactions-table td {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .btn-approve,
+  .btn-reject {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
 }

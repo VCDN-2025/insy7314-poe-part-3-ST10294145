@@ -1,86 +1,203 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import API from "../api/api";
-import "./Login.css";
+import axios from "axios";
 
-export default function Login() {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
-    console.log("=== FRONTEND LOGIN ATTEMPT ===");
-    console.log("Email:", email);
-    console.log("Password length:", password.length);
-    console.log("API baseURL:", API.defaults.baseURL);
-    
+    setError("");
+    setLoading(true);
+
+    console.log("🔑 Login attempt:", { email });
+
     try {
-      const res = await API.post("/auth/login", { email, password });
-      console.log("✅ Login response:", res.data);
-      
-      const { role, token, userName } = res.data;
+      const response = await axios.post(
+        "https://localhost:5000/api/auth/login",
+        { email, password },
+        { 
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true 
+        }
+      );
 
-      // Save userName to localStorage
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", role);
-      localStorage.setItem("userName", userName);
+      console.log("✅ Login response:", response.data);
 
-      console.log("✅ Login successful! User:", userName);
+      if (response.data.success) {
+        const { token, user } = response.data;
 
-      // Redirect based on role
-      if (role === "employee") {
-        localStorage.setItem("employeeName", userName);
-        navigate("/employee");
-      } else {
-        navigate("/user");
+        // Save to localStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("role", user.role);
+        localStorage.setItem("userName", user.name);
+        localStorage.setItem("userId", user.id);
+
+        console.log("✅ Saved to localStorage:", {
+          token: token.substring(0, 20) + "...",
+          role: user.role,
+          userName: user.name,
+          userId: user.id
+        });
+
+        // Navigate based on role
+        if (user.role === "employee") {
+          console.log("✅ Redirecting to /swift (employee)");
+          navigate("/swift");
+        } else {
+          console.log("✅ Redirecting to /dashboard (user)");
+          navigate("/dashboard");
+        }
       }
     } catch (err) {
       console.error("❌ Login error:", err);
-      console.error("Error response:", err.response?.data);
-      console.error("Error status:", err.response?.status);
-      console.error("Full error message:", err.response?.data?.message); 
-      setMessage(err.response?.data?.message || "Login failed");
+      
+      if (err.response) {
+        setError(err.response.data.message || "Login failed");
+      } else if (err.request) {
+        setError("Cannot connect to server. Is the backend running?");
+      } else {
+        setError("An unexpected error occurred");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <main className="login-page">
-      <section className="login-container">
-        <h2>Login</h2>
-        <form onSubmit={handleLogin} className="login-form">
-          <div className="form-group">
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <h2 style={styles.title}>🔐 Login</h2>
+        
+        <form onSubmit={handleLogin} style={styles.form}>
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Email</label>
             <input
-              placeholder="Email"
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              type="email"
+              placeholder="Enter your email"
               required
+              style={styles.input}
+              disabled={loading}
             />
           </div>
-          <div className="form-group">
+
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Password</label>
             <input
-              placeholder="Password"
+              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              type="password"
+              placeholder="Enter your password"
               required
+              style={styles.input}
+              disabled={loading}
             />
           </div>
-          <button type="submit" className="login-btn">
-            Login
+
+          {error && (
+            <div style={styles.error}>
+              ❌ {error}
+            </div>
+          )}
+
+          <button 
+            type="submit" 
+            style={styles.button}
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-        {message && <p className="message">{message}</p>}
-        <p className="register-text">
-          Don't have an account?{" "}
-          <span className="register-link" onClick={() => navigate("/register")}>
-            Register
-          </span>
-        </p>
-      </section>
-    </main>
+
+        <div style={styles.hint}>
+          <p><strong>Test Accounts:</strong></p>
+          <p>👤 User: user@test.com / password123</p>
+          <p>👨‍💼 Employee: employee@test.com / password123</p>
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
+const styles = {
+  container: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: "100vh",
+    backgroundColor: "#f0f2f5",
+    padding: "20px"
+  },
+  card: {
+    backgroundColor: "white",
+    padding: "40px",
+    borderRadius: "12px",
+    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+    width: "100%",
+    maxWidth: "400px"
+  },
+  title: {
+    textAlign: "center",
+    marginBottom: "30px",
+    color: "#333",
+    fontSize: "28px"
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "20px"
+  },
+  inputGroup: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px"
+  },
+  label: {
+    fontWeight: "600",
+    color: "#555",
+    fontSize: "14px"
+  },
+  input: {
+    padding: "12px",
+    border: "1px solid #ddd",
+    borderRadius: "6px",
+    fontSize: "16px",
+    transition: "border-color 0.3s"
+  },
+  button: {
+    padding: "14px",
+    backgroundColor: "#4CAF50",
+    color: "white",
+    border: "none",
+    borderRadius: "6px",
+    fontSize: "16px",
+    fontWeight: "600",
+    cursor: "pointer",
+    transition: "background-color 0.3s"
+  },
+  error: {
+    padding: "12px",
+    backgroundColor: "#fee",
+    color: "#c33",
+    borderRadius: "6px",
+    fontSize: "14px",
+    border: "1px solid #fcc"
+  },
+  hint: {
+    marginTop: "20px",
+    padding: "15px",
+    backgroundColor: "#f8f9fa",
+    borderRadius: "6px",
+    fontSize: "13px",
+    color: "#666",
+    lineHeight: "1.6"
+  }
+};
+
+export default Login;

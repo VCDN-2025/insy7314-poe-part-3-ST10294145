@@ -101,7 +101,7 @@ The app allows users to perform transactions, view their transaction history, an
 #### Backend
 
 ```bash
-cd server
+cd backend
 npm install
 npx nodemon server.js
 ```
@@ -111,7 +111,7 @@ npx nodemon server.js
 #### Frontend
 
 ```bash
-cd client
+cd frontend
 npm install
 npm run dev
 ```

@@ -9,7 +9,7 @@ The app allows users to perform transactions, view their transaction history, an
 
 ## 🗂 Project Structure
 
-### 1. Frontend (`client/`)
+### 1. Frontend (`frontend/`)
 - **Framework:** React + Vite  
 - **Purpose:** Provides the user interface for both customers and employees.
 - **Key Components:**
@@ -20,7 +20,7 @@ The app allows users to perform transactions, view their transaction history, an
 
 ---
 
-### 2. Backend (`server/`)
+### 2. Backend (`backend/`)
 - **Framework:** Node.js + Express  
 - **Purpose:** Handles API requests, user authentication, transaction management, and database interactions.
 - **Key Components:**
@@ -34,7 +34,7 @@ The app allows users to perform transactions, view their transaction history, an
 ### 3. Security & Authentication
 - **Password Security:** Passwords are hashed and salted using bcrypt.
 - **JWT Authentication:** JSON Web Tokens are used to secure API requests.
-- **Static Employee Accounts:** Employees are preconfigured; registration is not allowed.
+- **Static Employee and User Accounts:** Employees and Users are preconfigured; registration is not allowed.
 - **Input Validation:** All user inputs are whitelisted using regex to prevent injections.
 - **SSL:** All traffic must be served over HTTPS in production.
 

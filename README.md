@@ -1,168 +1,174 @@
-# Credify
+# 🏦 Credify - Full-Stack Banking Application
 
-## Description
-Credify is a full-stack banking application built using React for the frontend and Node.js with Express for the backend. It allows users to perform banking operations securely and efficiently.
+## 📖 Project Overview
+**Credify** is a secure, full-stack banking application designed to manage banking operations efficiently.  
+It is built using **React** for the frontend and **Node.js with Express** for the backend, connected to **MongoDB**.  
+The app allows users to perform transactions, view their transaction history, and employees to approve, verify, and manage payments, including integration with the **SWIFT payment system**.
 
-## Project Structure Overview
+---
 
-### 1. Frontend
-The frontend of Credify is built using React and Vite. Below are the key components in this section:
+## 🗂 Project Structure
 
-- **client/**: This directory contains the client-side code.
-  - **index.html**: The main HTML file that serves as the entry point for the React application, including the root div where the React app will be rendered.
-  - **package.json**: Contains metadata about the frontend project, including dependencies like React and development tools such as ESLint and Vite.
-  - **vite.config.js**: Configuration file for Vite, specifying how the development server and build process should behave.
-  - **hashPassword.js**: A utility function to hash passwords using bcrypt for secure user authentication.
+### 1. Frontend (`client/`)
+- **Framework:** React + Vite  
+- **Purpose:** Provides the user interface for both customers and employees.
+- **Key Components:**
+  - `index.html` – Main HTML entry point.
+  - `src/` – React components and pages (Dashboard, SWIFT page, Login, etc.).
+  - `vite.config.js` – Vite configuration for development and build.
+  - `hashPassword.js` – Utility to securely hash passwords with bcrypt.
 
-### 2. Backend
-The backend of Credify is built using Node.js and Express. Below are the key components in this section:
+---
 
-- **server/**: This directory contains the server-side code.
-  - **server.js**: The main entry point for the backend application, where the Express server is set up and configured to handle incoming requests.
-  - **package.json**: Contains metadata about the backend project, including dependencies such as Express and Mongoose for database interactions.
+### 2. Backend (`server/`)
+- **Framework:** Node.js + Express  
+- **Purpose:** Handles API requests, user authentication, transaction management, and database interactions.
+- **Key Components:**
+  - `server.js` – Express server setup, MongoDB connection, and API routing.
+  - `routes/` – Defines endpoints for authentication and transactions.
+  - `models/` – Mongoose models for Users and Transactions.
+  - `package.json` – Backend dependencies including `express`, `mongoose`, `bcryptjs`, and `dotenv`.
 
-### 3. Configuration Files
-- **.gitignore**: Specifies files and directories that should be ignored by Git, such as logs and dependency directories (e.g., node_modules).
-- **README.md**: Provides an overview of the entire project, including usage and contribution guidelines.
+---
 
-## Detailed Descriptions of Key Files
+### 3. Security & Authentication
+- **Password Security:** Passwords are hashed and salted using bcrypt.
+- **JWT Authentication:** JSON Web Tokens are used to secure API requests.
+- **Static Employee Accounts:** Employees are preconfigured; registration is not allowed.
+- **Input Validation:** All user inputs are whitelisted using regex to prevent injections.
+- **SSL:** All traffic must be served over HTTPS in production.
 
-### Frontend
+---
 
-#### index.html
-```html
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Credify</title>
-</head>
-<body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-</body>
-</html>
+### 4. DevSecOps Pipeline
+**CircleCI** is used to automate builds, testing, and code quality checks.
+
+- **Linting:** ESLint is configured for both frontend and backend.  
+- **Testing:** Unit and integration tests run automatically on push or pull requests.  
+- **Code Quality:** SonarQube scans for bugs, vulnerabilities, and code smells.  
+- **Vulnerability Checks:** `npm audit` is run in CI to check dependencies.  
+- **Future Deployment:** Configured for deployment on free platforms like **Vercel** (frontend) or **Render** (backend).  
+
+---
+
+### 5. SWIFT Payment System Integration
+
+**Purpose:** Allows employees to verify, approve, and submit international payments securely.
+
+**Features:**
+- Users can create new transactions with **amount, currency, SWIFT code, and account info**.
+- Employees can view **pending transactions**, update statuses (`verified`, `approved`, `rejected`), and submit approved payments.
+- Statuses are visually highlighted and tracked.
+- Transactions are safely handled via API calls.
+
+---
+
+### 6. Features
+
+**Customer Portal:**
+- Login securely with JWT and password hashing.
+- View transaction history.
+- Make new SWIFT payments.
+
+**Employee Portal:**
+- View all user transactions.
+- Approve, verify, or reject transactions.
+- Submit approved transactions to SWIFT.
+- Dashboard with status highlights for quick monitoring.
+
+**Shared Features:**
+- Responsive and user-friendly UI.
+- Consistent styling and clean design.
+- Security best practices applied across the stack.
+
+---
+
+### 7. Improvements from Part 2
+
+- Added **full SWIFT transaction management** for employees.
+- **Improved UI** consistency across dashboards.
+- **Frontend and backend fully integrated** with JWT and authentication.
+- Added **input validation** on all forms for security.
+- Implemented **linting and CI/CD pipeline** for DevSecOps compliance.
+- Passwords are now securely hashed and salted.
+- Static employee accounts added; registration removed for employees.
+- Implemented better error handling on API requests.
+
+---
+
+### 8. Installation & Running Locally
+
+#### Backend
+
+```bash
+cd server
+npm install
+npm run dev
 ```
-Sets up the basic HTML structure and links to the main JavaScript file where the React app is initialized.
 
-#### package.json (Frontend)
-```json
-{
-  "name": "frontend",
-  "version": "0.0.0",
-  "dependencies": {
-    "axios": "^1.13.2",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-router-dom": "^7.9.5"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^5.0.4",
-    "vite": "^7.1.7"
-  }
-}
+- Requires `.env` with `MONGODB_URI` and `JWT_SECRET`.
+
+#### Frontend
+
+```bash
+cd client
+npm install
+npm run dev
 ```
-Lists the dependencies required for the frontend, including libraries for making HTTP requests and managing routing.
 
-#### vite.config.js
-```javascript
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+- Frontend runs on **http://localhost:5000** by default.
 
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    port: 3000,
-  },
-});
-```
-Configures Vite to use the React plugin and sets the development server port.
+---
 
-### Backend
+### 9. Usage
 
-#### server.js
-```javascript
-import express from 'express';
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+1. Login as a preconfigured user or employee.
+2. Users can create SWIFT transactions.
+3. Employees can manage transactions, approve, and submit them.
 
-dotenv.config();
+---
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+### 10. Future Enhancements
 
-app.use(express.json());
+- Deploy frontend on **Vercel** and backend on **Render**.
+- Implement **MFA (Multi-Factor Authentication)** for added security.
+- Add **refresh tokens** for longer session security.
+- Integrate **email notifications** for transaction status changes.
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error(err));
+---
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-```
-Sets up the Express server, connects to MongoDB, and listens for incoming requests.
+### 11. Contributors
 
-#### package.json (Backend)
-```json
-{
-  "name": "backend",
-  "version": "1.0.0",
-  "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "mongoose": "^8.19.3"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.10"
-  }
-}
-```
-Lists the backend dependencies, including middleware for handling CORS, environment variables, and MongoDB interaction.
+- **Saihil Gurupersad**
+- **Yash Dhurumraj (ST10266783)**
+- **Dinay Ramchander (ST10311999)**
+- **Nehara Pillay (ST10198206)**
+- **Varun Perumal (ST10110356)**
 
-### Utility Script
+---
 
-#### hashPassword.js
-```javascript
-import bcrypt from 'bcryptjs';
+## 📋 Changelog
 
-export const hashPassword = async (password) => {
-  const salt = await bcrypt.genSalt(10);
-  return await bcrypt.hash(password, salt);
-};
-```
-A utility function to hash passwords securely using bcrypt, which is crucial for user authentication.
+### Part 3 Improvements
+- ✅ Complete SWIFT payment integration for employee portal
+- ✅ Enhanced security with JWT and bcrypt password hashing
+- ✅ CI/CD pipeline with GitHub Actions
+- ✅ Comprehensive input validation and sanitization
+- ✅ Improved error handling across all API endpoints
+- ✅ Static employee accounts with role-based access control
+- ✅ Responsive UI with consistent design language
+- ✅ Automated testing with Jest and code coverage reporting
 
-## SonarQube Integration
+### Part 2 Features
+- Basic transaction management
+- User authentication
+- MongoDB integration
+- Initial frontend design
 
-### Overview
-SonarQube is a tool for continuous inspection of code quality, providing detailed reports on bugs, vulnerabilities, and code smells.
+---
 
-### Project Configuration
-- **sonar-project.properties**: Configures the project for SonarQube analysis, specifying the project key, name, version, and source directories.
+## Video Demonstration
 
-## CircleCI Integration
-
-### Overview
-CircleCI is a continuous integration and continuous deployment (CI/CD) platform that automates the testing and deployment of applications.
-
-### Configuration
-- **.circleci/config.yml**: Defines the CI/CD pipeline, specifying jobs for building the application, installing dependencies, and running tests.
-
-## SWIFT Payment System Integration
-
-### Overview
-The SWIFT (Society for Worldwide Interbank Financial Telecommunication) payment system provides a standardized way for banks and financial institutions to send and receive information about financial transactions securely.
-
-### Functionality
-- **SWIFT Message Builder**: Implements functions to create and send SWIFT messages for transactions, ensuring secure and standardized communication between banks.
-- **Transaction Monitoring**: Monitors the status of SWIFT transactions and handles responses accordingly.
-
-## Conclusion
-Credify provides a structured approach to banking operations, leveraging modern technologies for both frontend and backend development. The application emphasizes security, efficiency, and a clear separation of concerns, making it easier to manage and develop each part independently.
-
-Feel free to ask if you need further details or assistance with specific components!
+<a href="https://youtu.be/pfjKzDTsiWs?si=lcgsingckR2zW6RM" target="_blank">
+  <img src="https://img.shields.io/badge/Watch%20Demo%20Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white&labelColor=FF0000" alt="Watch Demo Video" />
+</a>

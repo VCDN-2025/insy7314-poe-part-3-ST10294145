@@ -7,8 +7,8 @@ const paymentSchema = new mongoose.Schema({
   provider: { type: String, required: true },
   payeeAccount: { type: String, required: true },
   swiftCode: { type: String, required: true },
-  status: { type: String, default: "Pending" },
-  date: { type: Date, default: Date.now },
-});
+  status: { type: String, default: "Pending" }, // Pending | Approved | Rejected
+  date: { type: Date, default: Date.now }
+}, { timestamps: true });
 
 export default mongoose.model("Payment", paymentSchema);

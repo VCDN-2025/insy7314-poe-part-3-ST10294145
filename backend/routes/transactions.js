@@ -1,11 +1,11 @@
 import express from "express";
 import Transaction from "../models/Transaction.js";
-import verifyToken from "../middleware/verifyToken.js";
+import { authenticate, authorizeRole } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// CREATE transaction (users)
-router.post("/create", verifyToken, async (req, res) => {
+// CREATE transaction (users only)
+router.post("/create", authenticate, authorizeRole("user"), async (req, res) => {
   try {
     console.log("=== CREATE TRANSACTION DEBUG ===");
     console.log("Request Body:", req.body);
@@ -29,12 +29,6 @@ router.post("/create", verifyToken, async (req, res) => {
       });
     }
 
-    // Validate userId exists
-    if (!userId) {
-      console.error("User ID not found in token");
-      return res.status(401).json({ message: "Invalid token: user ID missing" });
-    }
-
     const transaction = await Transaction.create({
       userId,
       customerName,
@@ -49,12 +43,8 @@ router.post("/create", verifyToken, async (req, res) => {
     res.status(201).json(transaction);
     
   } catch (err) {
-    console.error("=== TRANSACTION CREATE ERROR ===");
-    console.error("Error message:", err.message);
-    console.error("Error name:", err.name);
-    console.error("Error stack:", err.stack);
+    console.error("=== TRANSACTION CREATE ERROR ===", err);
     
-    // Handle Mongoose validation errors
     if (err.name === "ValidationError") {
       return res.status(400).json({ 
         message: "Validation error",
@@ -72,8 +62,8 @@ router.post("/create", verifyToken, async (req, res) => {
   }
 });
 
-// GET pending transactions (employees)
-router.get("/pending", verifyToken, async (req, res) => {
+// GET pending transactions (employees only)
+router.get("/pending", authenticate, authorizeRole("employee"), async (req, res) => {
   try {
     const transactions = await Transaction.find().sort({ createdAt: -1 });
     console.log(`✅ Fetched ${transactions.length} transactions`);
@@ -87,8 +77,8 @@ router.get("/pending", verifyToken, async (req, res) => {
   }
 });
 
-// UPDATE status (employees)
-router.put("/status/:id", verifyToken, async (req, res) => {
+// UPDATE status (employees only)
+router.put("/status/:id", authenticate, authorizeRole("employee"), async (req, res) => {
   try {
     const { status } = req.body;
     const validStatus = ["verified", "approved", "rejected"];
@@ -119,8 +109,8 @@ router.put("/status/:id", verifyToken, async (req, res) => {
   }
 });
 
-// SUBMIT approved transactions to SWIFT (dummy)
-router.post("/submit", verifyToken, async (req, res) => {
+// SUBMIT approved transactions to SWIFT (employees only)
+router.post("/submit", authenticate, authorizeRole("employee"), async (req, res) => {
   try {
     const { transactionIds } = req.body;
 

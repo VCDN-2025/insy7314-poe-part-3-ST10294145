@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "./Login.css"; // make sure this path matches your file structure
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,8 +15,6 @@ const Login = () => {
     setError("");
     setLoading(true);
 
-    console.log("🔑 Login attempt:", { email });
-
     try {
       const response = await axios.post(
         "https://localhost:5000/api/auth/login",
@@ -26,8 +25,6 @@ const Login = () => {
         }
       );
 
-      console.log("✅ Login response:", response.data);
-
       if (response.data.success) {
         const { token, user } = response.data;
 
@@ -37,25 +34,14 @@ const Login = () => {
         localStorage.setItem("userName", user.name);
         localStorage.setItem("userId", user.id);
 
-        console.log("✅ Saved to localStorage:", {
-          token: token.substring(0, 20) + "...",
-          role: user.role,
-          userName: user.name,
-          userId: user.id
-        });
-
         // Navigate based on role
         if (user.role === "employee") {
-          console.log("✅ Redirecting to /swift (employee)");
           navigate("/swift");
         } else {
-          console.log("✅ Redirecting to /dashboard (user)");
           navigate("/dashboard");
         }
       }
     } catch (err) {
-      console.error("❌ Login error:", err);
-      
       if (err.response) {
         setError(err.response.data.message || "Login failed");
       } else if (err.request) {
@@ -69,53 +55,43 @@ const Login = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.title}>🔐 Login</h2>
-        
-        <form onSubmit={handleLogin} style={styles.form}>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Email</label>
+    <div className="login-container">
+      <div className="login-card">
+        <h2 className="login-title">🔐 Login</h2>
+
+        <form onSubmit={handleLogin} className="login-form">
+          <div className="input-group">
+            <label>Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               required
-              style={styles.input}
               disabled={loading}
             />
           </div>
 
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Password</label>
+          <div className="input-group">
+            <label>Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
               required
-              style={styles.input}
               disabled={loading}
             />
           </div>
 
-          {error && (
-            <div style={styles.error}>
-              ❌ {error}
-            </div>
-          )}
+          {error && <div className="error">❌ {error}</div>}
 
-          <button 
-            type="submit" 
-            style={styles.button}
-            disabled={loading}
-          >
+          <button type="submit" className="login-button" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
-        <div style={styles.hint}>
+        <div className="hint">
           <p><strong>Test Accounts:</strong></p>
           <p>👤 User: user@test.com / password123</p>
           <p>👨‍💼 Employee: employee@test.com / password123</p>
@@ -123,81 +99,6 @@ const Login = () => {
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "100vh",
-    backgroundColor: "#f0f2f5",
-    padding: "20px"
-  },
-  card: {
-    backgroundColor: "white",
-    padding: "40px",
-    borderRadius: "12px",
-    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-    width: "100%",
-    maxWidth: "400px"
-  },
-  title: {
-    textAlign: "center",
-    marginBottom: "30px",
-    color: "#333",
-    fontSize: "28px"
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "20px"
-  },
-  inputGroup: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "8px"
-  },
-  label: {
-    fontWeight: "600",
-    color: "#555",
-    fontSize: "14px"
-  },
-  input: {
-    padding: "12px",
-    border: "1px solid #ddd",
-    borderRadius: "6px",
-    fontSize: "16px",
-    transition: "border-color 0.3s"
-  },
-  button: {
-    padding: "14px",
-    backgroundColor: "#4CAF50",
-    color: "white",
-    border: "none",
-    borderRadius: "6px",
-    fontSize: "16px",
-    fontWeight: "600",
-    cursor: "pointer",
-    transition: "background-color 0.3s"
-  },
-  error: {
-    padding: "12px",
-    backgroundColor: "#fee",
-    color: "#c33",
-    borderRadius: "6px",
-    fontSize: "14px",
-    border: "1px solid #fcc"
-  },
-  hint: {
-    marginTop: "20px",
-    padding: "15px",
-    backgroundColor: "#f8f9fa",
-    borderRadius: "6px",
-    fontSize: "13px",
-    color: "#666",
-    lineHeight: "1.6"
-  }
 };
 
 export default Login;

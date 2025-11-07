@@ -4,7 +4,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import authRoutes from "./routes/auth.js";
+import authRoutes from "./routes/authRoutes.js"; // <-- updated
 import paymentRoutes from "./routes/paymentRoutes.js";
 import transactionRoutes from "./routes/transactions.js";
 
@@ -21,9 +21,9 @@ app.use(cors({
 app.use(express.json({ limit: "10kb" }));
 
 // Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/payments", paymentRoutes);
-app.use("/api/transactions", transactionRoutes);
+app.use("/api/auth", authRoutes);           // login-only auth
+app.use("/api/payments", paymentRoutes);   // payments (user & employee)
+app.use("/api/transactions", transactionRoutes); // keep as-is if still needed
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
@@ -38,7 +38,7 @@ mongoose.connect(process.env.MONGO_URI)
     process.exit(1);
   });
 
-// HTTPS server
+// HTTPS server with your existing SSL certs
 const sslOptions = {
   key: fs.readFileSync("./ssl/localhost-key.pem"),
   cert: fs.readFileSync("./ssl/localhost.pem"),

@@ -1,13 +1,21 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import rateLimit from "express-rate-limit"; 
 dotenv.config();
 import User from "../models/User.js";
 
 const router = express.Router();
 
+// Login Rate Limiter 
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // 5 login attempts per IP
+  message: "Too many login attempts, please try again after 15 minutes."
+});
+
 // POST /api/auth/login
-router.post("/login", async (req, res) => {
+router.post("/login", loginLimiter, async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ message: "Email and password required" });
 

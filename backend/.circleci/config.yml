@@ -1,0 +1,42 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5.0.3
+
+jobs:
+  build_and_test:
+    docker:
+      - image: cimg/node:18.16
+    steps:
+      - checkout
+
+      # Install dependencies
+      - run: npm install
+
+      # Run ESLint
+      - run:
+          name: Run Lint
+          command: npm run lint
+
+      # Run Newman API tests
+      - run:
+          name: API Tests
+          command: newman run tests/collection.json
+
+      # SonarQube Scan
+      - run:
+          name: Sonar Scan
+          command: |
+            npm install -g sonarqube-scanner
+            sonar-scanner \
+              -Dsonar.projectKey=<projectKey> \
+              -Dsonar.organization=<organization> \
+              -Dsonar.sources=. \
+              -Dsonar.host.url=https://sonarcloud.io \
+              -Dsonar.login=$SONAR_TOKEN
+
+workflows:
+  version: 2
+  devsecops_pipeline:
+    jobs:
+      - build_and_test

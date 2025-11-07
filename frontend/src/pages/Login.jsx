@@ -11,25 +11,37 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    
+    console.log("=== FRONTEND LOGIN ATTEMPT ===");
+    console.log("Email:", email);
+    console.log("Password length:", password.length);
+    console.log("API baseURL:", API.defaults.baseURL);
+    
     try {
       const res = await API.post("/auth/login", { email, password });
-      const { role, token, userName } = res.data;  //Get userName from response
+      console.log("✅ Login response:", res.data);
+      
+      const { role, token, userName } = res.data;
 
       // Save userName to localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
-      localStorage.setItem("userName", userName);  
+      localStorage.setItem("userName", userName);
 
       console.log("✅ Login successful! User:", userName);
 
       // Redirect based on role
       if (role === "employee") {
-        localStorage.setItem("employeeName", userName);  
+        localStorage.setItem("employeeName", userName);
         navigate("/employee");
       } else {
         navigate("/user");
       }
     } catch (err) {
+      console.error("❌ Login error:", err);
+      console.error("Error response:", err.response?.data);
+      console.error("Error status:", err.response?.status);
+      console.error("Full error message:", err.response?.data?.message); 
       setMessage(err.response?.data?.message || "Login failed");
     }
   };

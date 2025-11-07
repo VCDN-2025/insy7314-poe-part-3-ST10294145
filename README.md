@@ -103,7 +103,7 @@ The app allows users to perform transactions, view their transaction history, an
 ```bash
 cd server
 npm install
-npm run dev
+npx nodemon server.js
 ```
 
 - Requires `.env` with `MONGODB_URI` and `JWT_SECRET`.

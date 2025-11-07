@@ -8,9 +8,13 @@ export default defineConfig([
     plugins: { js },
     extends: ["js/recommended"],
     languageOptions: {
-      globals: globals.browser,
+      globals: { ...globals.browser, ...globals.node }, 
       ecmaVersion: "latest",
-      sourceType: "module" // <-- Treat all files as ES modules
+      sourceType: "module" 
+    },
+    env: {
+      node: true,      
+      browser: true     
     }
   }
 ]);
